@@ -8,5 +8,6 @@ data class ParsedDetails(
     val summary: String,
     val dlElements: List<DlElement>,
     val dom: Document,
+    val detailsElement: Element,   // 👈 hinzufügen!
     val dlNode: Element
 )

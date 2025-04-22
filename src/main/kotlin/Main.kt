@@ -1,12 +1,11 @@
 package org.example
 
-import parser.addDdElement
-import parser.parseAndModifyDetails
-import parser.writeXml
+import parser.parseAllDetails
+import parser.writeDetailsElement
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-fun main() {
+fun main2() {
     val name = "Kotlin"
     //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
     // to see how IntelliJ IDEA suggests fixing it.
@@ -19,28 +18,38 @@ fun main() {
     }
 }
 
-fun main1() {
+fun main() {
     val inputXml = """
-        <Details id="1">
-            <summary><b>Optionaler Titel</b></summary>
-            <dl>
-                <dt>Begriff 1</dt>
-                <dd>Definition 1a</dd>
-                <dd>Definition 1b</dd>
-                <dt>Begriff 2</dt>
-                <dd>Definition 2a</dd>
-            </dl>
-        </Details>
+        <ChangeLog>
+            <Details id="1">
+                <summary><b>Eintrag Eins</b></summary>
+                <dl>
+                    <dt>Begriff A</dt>
+                    <dd>Definition A1</dd>
+                </dl>
+            </Details>
+            <Details id="2">
+                <summary><b>Eintrag Zwei</b></summary>
+                <dl>
+                    <dt>Begriff B</dt>
+                    <dd>Definition B1</dd>
+                </dl>
+            </Details>
+        </ChangeLog>
     """.trimIndent()
 
-    val parsed = parseAndModifyDetails(inputXml)
+    val parsedList = parseAllDetails(inputXml)
 
-    println("ID: ${parsed.id}")
-    println("Summary: '${parsed.summary}'")
-    parsed.dlElements.forEach { println(it) }
+    println("Gefundene Details:")
+    parsedList.forEach {
+        println("ID: ${it.id} — Summary: '${it.summary}'")
+        it.dlElements.forEach { el -> println("  $el") }
+    }
 
-    addDdElement(parsed.dom, parsed.dlNode, "neu hinzugefügt")
-
-    val outputXml = writeXml(parsed.dom)
-    println("\n--- Geändertes XML ---\n$outputXml")
+    // Beispiel: Füge einem Eintrag mit ID = 2 ein neues <dd> hinzu
+    val detailsToOutput = parsedList.find { it.id == 2 }
+    detailsToOutput?.let {
+        println("--- Nur das <Details>-Element als String ---")
+        println(writeDetailsElement(it.detailsElement))
+    }
 }
