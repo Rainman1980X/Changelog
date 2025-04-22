@@ -30,7 +30,7 @@ fun parseChangelogFile(filePath: String): List<ChangelogEntry> {
                 if (currentVersion != null && currentDate != null) {
                     changelogEntries += ChangelogEntry(
                         version = currentVersion,
-                        date = currentDate!!,
+                        date = currentDate,
                         entries = currentItems.toList()
                     )
                 }
