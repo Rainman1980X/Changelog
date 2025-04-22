@@ -14,8 +14,8 @@ fun addDdToDetails(parsed: ParsedDetails, value: String) {
 
 fun writeDetailsElement(detailsElement: Element): String {
     val transformer = TransformerFactory.newInstance().newTransformer()
-    transformer.setOutputProperty(OutputKeys.INDENT, "yes")
-    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2")
+//    transformer.setOutputProperty(OutputKeys.INDENT, "yes")
+//    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2")
     transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes") // kein <?xml ...?>
 
     val writer = java.io.StringWriter()
