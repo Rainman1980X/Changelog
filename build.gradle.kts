@@ -10,6 +10,8 @@ repositories {
 }
 
 dependencies {
+    implementation("com.formdev:flatlaf:3.3")
+    implementation("com.miglayout:miglayout-swing:11.0")
     testImplementation(kotlin("test"))
 }
 
