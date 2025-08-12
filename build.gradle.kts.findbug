@@ -1,0 +1,57 @@
+// --- imports MUST be at the top ---
+import com.github.spotbugs.snom.SpotBugsTask
+import com.github.spotbugs.snom.Effort
+import com.github.spotbugs.snom.Confidence
+
+plugins {
+    id("java")
+    id("com.github.spotbugs") version "6.2.4" // Gradle plugin
+}
+
+group = "de.burger.it"
+version = "1.0-SNAPSHOT"
+
+repositories { mavenCentral() }
+
+dependencies {
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.test { useJUnitPlatform() }
+
+spotbugs {
+    // SpotBugs core version
+    toolVersion.set("4.9.3")
+    ignoreFailures.set(false) // fail build on findings
+    showProgress.set(true)
+}
+
+tasks.withType<SpotBugsTask>().configureEach {
+    // Stricter analysis
+    effort.set(Effort.MAX)          // MIN, DEFAULT, MAX
+    reportLevel.set(Confidence.LOW) // HIGH, MEDIUM, LOW
+
+    // Optional: exclude filter
+    val exclude = file("config/spotbugs/exclude.xml")
+    if (exclude.exists()) {
+        excludeFilter.set(exclude)
+    }
+
+    // Create HTML & XML reports with unique names per project & task
+    reports.create("html") {
+        required.set(true)
+        // e.g. build/reports/spotbugs/my-module-spotbugsMain.html
+        outputLocation.set(layout.buildDirectory.file("reports/spotbugs/${project.name}-${name}.html"))
+    }
+    reports.create("xml") {
+        required.set(true)
+        outputLocation.set(layout.buildDirectory.file("reports/spotbugs/${project.name}-${name}.xml"))
+    }
+}
+
+// Ensure SpotBugs runs with `check`
+tasks.named("check") {
+    dependsOn("spotbugsMain", "spotbugsTest")
+}
